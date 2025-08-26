@@ -17,14 +17,9 @@ app.use('/api/categories', require("./routes/categorie.route"));
 app.use('/api/scategories', require("./routes/scategorie.route"));
 app.use('/api/articles', require("./routes/article.route"));
 
-// Connexion à la base données (choix local ou cloud selon .env)
-const dbUri = process.env.DATABASECLOUD || process.env.DATABASE;
-
-mongoose.connect(dbUri, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-  .then(() => console.log(`✅ Database connected: ${dbUri.includes('mongodb+srv') ? 'Cloud' : 'Local'}`))
+// Connexion à la base de données
+mongoose.connect(process.env.DATABASECLOUD)
+  .then(() => console.log("✅ Database Successfully Connected"))
   .catch(err => {
     console.log("❌ Unable to connect to database", err);
     process.exit();
@@ -35,8 +30,10 @@ app.get("/", (req, res) => {
   res.send("bonjour 👋");
 });
 
-app.listen(process.env.PORT || 3001, () => {
-  console.log(`🚀 Server is listening on port ${process.env.PORT || 3001}`);
+// Écoute du serveur (local uniquement)
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
+  console.log(`🚀 Server is listening on port ${PORT}`);
 });
 
 module.exports = app;
